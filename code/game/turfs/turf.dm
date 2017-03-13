@@ -60,6 +60,9 @@
 
 /turf/Destroy(force)
 	. = QDEL_HINT_IWILLGC
+	if(!changing_turf)
+		stack_trace("Incorrect turf deletion")
+	changing_turf = FALSE
 	if(force)
 		..()
 		//this will completely wipe turf state
@@ -69,9 +72,6 @@
 		for(var/I in B.vars)
 			B.vars[I] = null
 		return
-	if(!changing_turf)
-		stack_trace("Incorrect turf deletion")
-	changing_turf = FALSE
 	SSair.remove_from_active(src)
 	visibilityChanged()
 	initialized = FALSE
@@ -292,7 +292,7 @@
 
 /turf/storage_contents_dump_act(obj/item/weapon/storage/src_object, mob/user)
 	if(src_object.contents.len)
-		usr << "<span class='notice'>You start dumping out the contents...</span>"
+		to_chat(usr, "<span class='notice'>You start dumping out the contents...</span>")
 		if(!do_after(usr,20,target=src_object))
 			return 0
 
