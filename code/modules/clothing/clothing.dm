@@ -32,6 +32,13 @@
 
 	var/obj/item/weapon/storage/internal/pocket/pockets = null
 
+	//These allow head/mask items to dynamically alter the user's hair
+	// and facial hair, checking hair_extensions.dmi and facialhair_extensions.dmi
+	// for a state matching hair_state+dynamic_hair_suffix
+	// THESE OVERRIDE THE HIDEHAIR FLAGS
+	var/dynamic_hair_suffix = ""//head > mask for head hair
+	var/dynamic_fhair_suffix = ""//mask > head for facial hair
+
 /obj/item/clothing/New()
 	..()
 	if(ispath(pockets))
@@ -171,10 +178,13 @@ var/list/damaged_clothes_icons = list()
 	desc = "Protects your hearing from loud noises, and quiet ones as well."
 	icon_state = "earmuffs"
 	item_state = "earmuffs"
-	flags = EARBANGPROTECT
 	strip_delay = 15
 	put_on_delay = 25
 	resistance_flags = FLAMMABLE
+
+/obj/item/clothing/ears/earmuffs/Initialize(mapload)
+	..()
+	SET_SECONDARY_FLAG(src, BANG_PROTECT)
 
 //Glasses
 /obj/item/clothing/glasses
